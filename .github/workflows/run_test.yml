@@ -11,6 +11,7 @@ on:
       - development
 
 env:
+  DJANGO_SETTINGS_MODULE: "config.settings"
   SECRET_KEY: ${{ secrets.SECRET_KEY }}
   DEBUG: ${{ secrets.DEBUG }}
   NAME: ${{ secrets.NAME }}
@@ -79,5 +80,4 @@ jobs:
       - name: Run tests
         run: |
           source .venv/bin/activate
-          coverage run --source='apps.products.views'
-          coverage report --fail-under=100
+          python manage.py test
