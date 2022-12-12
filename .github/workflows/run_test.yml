@@ -11,7 +11,7 @@ on:
       - development
 
 env:
-  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  SECRET_KEY: ${{ SECRET_KEY }}
   DEBUG: ${{ secrets.DEBUG }}
   NAME: ${{ secrets.NAME }}
   USER: ${{ secrets.USER }}
