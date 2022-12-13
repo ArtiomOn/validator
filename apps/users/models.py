@@ -11,7 +11,8 @@ class CustomUserManager(UserManager):
             **extra_fields
         )
 
-    def create_user(self, email=None, password=None, **extra_fields):
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        email = self.normalize_email(email)
         return super().create_user(
             username=email,
             email=email,
