@@ -3,20 +3,29 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.users.serializers import UserSerializer
+from apps.users.serializers import UserRegisterSerializer, UserListSerializer
 
 User = get_user_model()
+
+__all__ = (
+    'UserViewSet',
+)
 
 
 class UserViewSet(ListModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserListSerializer
+    permission_classes = (IsAuthenticated,)
     permission_classes_by_action = {
         'create': (AllowAny,),
-        'list': (IsAuthenticated,),
+        'list': (IsAdminUser,),
+    }
+    serializer_classes_by_action = {
+        'create': UserRegisterSerializer,
+        'list': UserListSerializer,
     }
 
     def get_permissions(self):
@@ -26,6 +35,12 @@ class UserViewSet(ListModelMixin, viewsets.GenericViewSet):
         except KeyError:
             # action is not set return default permission_classes
             return [permission() for permission in self.permission_classes]
+
+    def get_serializer_class(self):
+        try:
+            return self.serializer_classes_by_action[self.action]
+        except (KeyError, AttributeError):
+            return super().get_serializer_class().get_serializer_class()
 
     @action(
         methods=['POST'],
