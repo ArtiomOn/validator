@@ -19,4 +19,4 @@ class CustomGenericViewSet(GenericViewSet):
                 return [permission() for permission in self.permission_by_action[self.action]]
             except KeyError:
                 return [permission() for permission in self.permission_by_action[DEFAULT]]
-        return super().get_permissions()
+        return self.permission_classes()
