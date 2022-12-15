@@ -15,5 +15,8 @@ class CustomGenericViewSet(GenericViewSet):
 
     def get_permissions(self):
         if self.action in self.permission_by_action or 'default' in self.permission_by_action:
-            return [permission() for permission in self.permission_by_action[self.action]]
-        return self.permission_classes()
+            try:
+                return [permission() for permission in self.permission_by_action[self.action]]
+            except KeyError:
+                return [permission() for permission in self.permission_by_action[DEFAULT]]
+        return super().get_permissions()
