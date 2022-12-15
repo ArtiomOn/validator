@@ -73,6 +73,7 @@ virtualenv = "20.17.1"
 webencodings = "0.5.1"
 zipp = "3.11.0"
 django-jazzmin = "^2.6.0"
+Faker = "^15.3.4"
 
 
 [build-system]
