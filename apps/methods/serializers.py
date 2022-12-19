@@ -17,6 +17,7 @@ class EmailSerializer(ModelSerializer):
         fields = '__all__'
         extra_kwargs = {
             'is_valid': {'read_only': True},
+            'user': {'read_only': True},
         }
 
 
@@ -33,4 +34,5 @@ class IMEISerializer(ModelSerializer):
         fields = '__all__'
         extra_kwargs = {
             'is_valid': {'read_only': True},
+            'user': {'read_only': True},
         }
