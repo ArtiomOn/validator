@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.common.views import CustomGenericViewSet
+from apps.common.views import ExtendedViewSet
 from apps.users.serializers import UserRegisterSerializer, UserListSerializer
 
 User = get_user_model()
@@ -15,7 +15,7 @@ __all__ = (
 )
 
 
-class UserViewSet(CustomGenericViewSet, ListModelMixin):
+class UserViewSet(ExtendedViewSet, ListModelMixin):
     queryset = User.objects.all()
     permission_by_action = {
         'register': [AllowAny],
