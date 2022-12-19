@@ -1,5 +1,11 @@
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
+from apps.common.models import BaseModel
+
+__all__ = (
+    'CustomUser',
+    'CustomUserManager',
+)
 
 
 class CustomUserManager(UserManager):
@@ -21,7 +27,7 @@ class CustomUserManager(UserManager):
         )
 
 
-class CustomUser(AbstractUser):
+class CustomUser(AbstractUser, BaseModel):
     email = models.EmailField('email address', blank=False, unique=True)
     password = models.CharField(max_length=255, blank=False)
 

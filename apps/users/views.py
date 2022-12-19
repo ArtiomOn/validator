@@ -1,31 +1,31 @@
 from django.contrib.auth import get_user_model
-from rest_framework.response import Response
-from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.users.serializers import UserSerializer
+from apps.common.views import CustomGenericViewSet
+from apps.users.serializers import UserRegisterSerializer, UserListSerializer
 
 User = get_user_model()
 
+__all__ = (
+    'UserViewSet',
+)
 
-class UserViewSet(ListModelMixin, viewsets.GenericViewSet):
+
+class UserViewSet(CustomGenericViewSet, ListModelMixin):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes_by_action = {
-        'create': (AllowAny,),
-        'list': (IsAuthenticated,),
+    permission_by_action = {
+        'register': [AllowAny],
+        'list': [IsAdminUser],
     }
-
-    def get_permissions(self):
-        try:
-            # return permission_classes depending on `action`
-            return [permission() for permission in self.permission_classes_by_action[self.action]]
-        except KeyError:
-            # action is not set return default permission_classes
-            return [permission() for permission in self.permission_classes]
+    serializers_by_action = {
+        'default': UserListSerializer,
+        'register': UserRegisterSerializer,
+        'list': UserListSerializer,
+    }
 
     @action(
         methods=['POST'],
