@@ -37,7 +37,7 @@ class MethodsTestCase(APITestCase):
             "email": 'artiom@gmail.com',
         }
         response = self.client.post("/methods/email/email-check", data=data, **auth(user=self.user))
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         response = self.client.get('/methods/email/email-check', **auth(user=self.user))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -51,6 +51,8 @@ class MethodsTestCase(APITestCase):
             "imei": '511557981902548',
         }
         response = self.client.post("/methods/imei/imei-check", data=data, **auth(user=self.user))
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         response = self.client.get('/methods/imei/imei-check', **auth(user=self.user))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.post('/methods/imei/generate-imei', **auth(user=self.user))
         self.assertEqual(response.status_code, status.HTTP_200_OK)

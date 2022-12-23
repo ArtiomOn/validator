@@ -22,7 +22,7 @@ class Email(BaseModel):
 
 class IMEI(BaseModel):
     imei = models.CharField(max_length=15)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='imeis')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='imeis', null=True)
     is_valid = models.BooleanField(default=False, blank=True, null=True)
 
     class Meta:
