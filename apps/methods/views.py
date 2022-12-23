@@ -1,7 +1,6 @@
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
-from rest_framework.status import HTTP_201_CREATED
 
 from apps.common.views import ExtendedRetrieveUpdateDestroyAPIView
 from apps.methods.models import Email, IMEI
@@ -30,7 +29,7 @@ class EmailViewSet(ExtendedRetrieveUpdateDestroyAPIView):
             )
         return Response(serializer.data)
 
-    @email_check.mapping.get
+    @action(detail=False, methods=['get'], url_path='user_email', url_name='user_email')
     def user_email(self, request, *args, **kwargs):
         queryset = self.queryset.filter(user=request.user)
         serializer = self.get_serializer(queryset, many=True)
@@ -40,7 +39,6 @@ class EmailViewSet(ExtendedRetrieveUpdateDestroyAPIView):
 # noinspection DuplicatedCode
 class IMEIViewSet(ExtendedRetrieveUpdateDestroyAPIView):
     queryset = IMEI.objects.all()
-    serializer_class = IMEISerializer
     serializers_by_action = {
         "default": IMEISerializer,
     }
@@ -74,7 +72,7 @@ class IMEIViewSet(ExtendedRetrieveUpdateDestroyAPIView):
             )
         return Response(serializer.data)
 
-    @imei_check.mapping.get
+    @action(detail=False, methods=['get'], url_path='user_imei', url_name='user_imei')
     def user_imei(self, request, *args, **kwargs):
         queryset = self.queryset.filter(user=request.user)
         serializer = self.get_serializer(queryset, many=True)
