@@ -18,7 +18,7 @@ class EmailViewSet(ExtendedRetrieveUpdateDestroyAPIView):
         'update': [IsAdminUser],
     }
 
-    @action(detail=False, methods=['post'], url_path='email-check', url_name='email-check')
+    @action(detail=False, methods=['post'], url_path='email_check', url_name='email_check')
     def email_check(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -49,7 +49,7 @@ class IMEIViewSet(ExtendedRetrieveUpdateDestroyAPIView):
         'update': [IsAdminUser],
     }
 
-    @action(detail=False, methods=['post'], url_path='imei-check', url_name='imei-check')
+    @action(detail=False, methods=['post'], url_path='imei_check', url_name='imei_check')
     def imei_check(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -60,7 +60,7 @@ class IMEIViewSet(ExtendedRetrieveUpdateDestroyAPIView):
             )
         return Response(serializer.data)
 
-    @action(detail=False, methods=['post'], url_path='generate-imei', url_name='generate-imei')
+    @action(detail=False, methods=['post'], url_path='generate_imei', url_name='generate_imei')
     def generate_imei(self, request, *args, **kwargs):
         imei = ImeiGenerator().generate()
         serializer = self.get_serializer(data={'imei': imei})
