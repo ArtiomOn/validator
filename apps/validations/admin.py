@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.methods.models import Email, IMEI
+from apps.validations.models import Email, IMEI
 
 
 @admin.register(Email)
