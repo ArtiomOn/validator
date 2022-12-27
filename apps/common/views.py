@@ -13,7 +13,6 @@ DEFAULT = 'default'
 class ExtendedViewSet(GenericViewSet):
     serializers_by_action = {}
     permission_by_action = {}
-    authentication_by_action = {}
 
     def get_serializer_class(self):
         if serializer := self.serializers_by_action.get(self.action) or self.serializers_by_action.get(DEFAULT):

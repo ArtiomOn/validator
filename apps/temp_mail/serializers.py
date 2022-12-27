@@ -18,7 +18,7 @@ class TempMailMessageSerializer(Serializer):
     def create(self, validated_data):
         return Message.objects.bulk_update_or_create(
             validated_data['messages'],
-            update_fields=['subject', 'body'],
+            update_fields=['subject', 'body', 'user'],
             match_field='message_id'
         )
 

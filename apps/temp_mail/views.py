@@ -1,5 +1,6 @@
+from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from apps.common.views import ExtendedViewSet
@@ -13,24 +14,36 @@ class TempMailViewSet(
     ExtendedViewSet
 ):
     queryset = TempMail.objects.all()
-    serializer_class = TempMailSerializer
-    permission_classes = [AllowAny]
+    permission_by_action = {
+        'default': [AllowAny],
+        'user_emails': [IsAuthenticated],
+    }
+    serializers_by_action = {
+        'default': TempMailSerializer,
+        'get_all_domains': DomainSerializer,
+    }
 
-    @action(methods=['get'], detail=False, url_path='get_all_domains', serializer_class=DomainSerializer)
+    @action(methods=['get'], detail=False, url_path='get_all_domains')
     def get_all_domains(self, request, *args, **kwargs):
         temp_mail = TempMailScrapping()
         domains = temp_mail.get_all_domains()
-        serializer = self.serializer_class(data=domains)
+        serializer = self.get_serializer(data=domains)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data)
 
-    @action(methods=['post'], detail=False, url_path='create_temporary_email', serializer_class=TempMailSerializer)
+    @action(methods=['post'], detail=False, url_path='create_temporary_email')
     def create_temporary_email(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(
             user=request.user if request.user.is_authenticated else None
         )
+        return Response(serializer.data)
+
+    @action(methods=['get'], detail=False, url_path='user_emails')
+    def user_emails(self, request, *args, **kwargs):
+        queryset = self.get_queryset().filter(user=request.user)
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
 
@@ -38,16 +51,23 @@ class MessageViewSet(
     ExtendedViewSet
 ):
     queryset = Message.objects.all()
+    serializer_class = TempMailMessageSerializer
+    permission_by_action = {
+        'default': (AllowAny,),
+    }
 
-    @action(methods=['post'], detail=False, url_path='check_mailbox', serializer_class=TempMailMessageSerializer)
+    @action(methods=['post'], detail=False, url_path='check_mailbox')
     def check_mailbox(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        messages, bulk_messages = TempMailHelper.get_messages(
+        messages = TempMailHelper.get_messages(
             validated_data=serializer.validated_data,
             user=request.user
         )
+        if not messages:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        messages, bulk_data = messages
         serializer.save(
-            messages=bulk_messages,
+            messages=bulk_data,
         )
         return Response(TempMailMessageSerializer(messages).data)

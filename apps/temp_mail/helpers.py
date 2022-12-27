@@ -1,6 +1,3 @@
-from rest_framework import status
-from rest_framework.response import Response
-
 from apps.temp_mail.scrapping.scrapping import TempMail as TempMailScrapping
 
 
@@ -60,7 +57,7 @@ class TempMailHelper:
             domain=email_domain
         )
         if not messages:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return
         messages, bulk_messages = TempMailHelper._payload(
             **messages,
             email=validated_data['temp_email'],
