@@ -75,6 +75,7 @@ zipp = "3.11.0"
 django-jazzmin = "^2.6.0"
 Faker = "^15.3.4"
 py3-validate-email = {git = "https://gitea.ksol.io/karolyi/py3-validate-email", rev = "v1.0.9"}
+django-bulk-update-or-create = "^0.3.0"
 
 
 [build-system]
