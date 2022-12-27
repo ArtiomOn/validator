@@ -1,15 +1,20 @@
+import random
+import string
+
 from apps.temp_mail.scrapping.scrapping import TempMail as TempMailScrapping
 
 
 class DomainChoices:
     DOMAIN_CHOICES = (
-        ("1secmail.com", "1secmail.com"),
-        ("1secmail.org", "1secmail.org"),
-        ("1secmail.net", "1secmail.net"),
-        ("wwjmp.com", "wwjmp.com"),
-        ("esiix.com", "esiix.com"),
-        ("xojxe.com", "xojxe.com"),
-        ("yoggm.com", "yoggm.com"),
+        [
+            "1secmail.com",
+            "1secmail.org",
+            "1secmail.net",
+            "wwjmp.com",
+            "esiix.com",
+            "xojxe.com",
+            "yoggm.com"
+        ],
     )
 
 
@@ -64,3 +69,13 @@ class TempMailHelper:
             user=user if user.is_authenticated else None
         )
         return messages, bulk_messages
+
+    @staticmethod
+    def generate_user_name():
+        name = string.ascii_lowercase + string.digits
+        username = ''.join(random.choice(name) for _ in range(10))
+        return username
+
+    @staticmethod
+    def generate_domain():
+        return random.choice(DomainChoices.DOMAIN_CHOICES[0])

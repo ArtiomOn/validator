@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, Serializer
 
-from apps.temp_mail.helpers import DomainChoices
 from apps.temp_mail.models import TempMail, Message
 
 
@@ -25,7 +24,7 @@ class TempMailMessageSerializer(Serializer):
 
 class TempMailSerializer(ModelSerializer):
     email_username = serializers.CharField(required=True)
-    email_domain = serializers.ChoiceField(choices=DomainChoices.DOMAIN_CHOICES, required=True)
+    email_domain = serializers.CharField(required=True)
 
     class Meta:
         model = TempMail
@@ -38,3 +37,15 @@ class TempMailSerializer(ModelSerializer):
 
 class DomainSerializer(Serializer):
     email_domain = serializers.ListField(max_length=255)
+
+
+class TempRandomMailSerializer(ModelSerializer):
+    class Meta:
+        model = TempMail
+        fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True},
+            'temp_email': {'read_only': True},
+            'email_username': {'read_only': True},
+            'email_domain': {'read_only': True},
+        }

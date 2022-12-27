@@ -23,8 +23,8 @@ class TempMail(BaseModel):
     )
 
     class Meta:
-        verbose_name = 'TempMail'
-        verbose_name_plural = 'TempMails'
+        verbose_name = 'Temporary mail'
+        verbose_name_plural = 'Temporary mails'
         ordering = ('-created_at',)
 
     def __str__(self):
