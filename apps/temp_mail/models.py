@@ -1,8 +1,8 @@
+from bulk_update_or_create import BulkUpdateOrCreateQuerySet
 from django.contrib.auth import get_user_model
 from django.db import models
 
 from apps.common.models import BaseModel
-from apps.temp_mail.helpers import DomainChoices
 
 User = get_user_model()
 
@@ -12,7 +12,6 @@ class TempMail(BaseModel):
     email_username = models.CharField(max_length=255)
     email_domain = models.CharField(
         max_length=255,
-        choices=DomainChoices.DOMAIN_CHOICES,
         default='1secmail.com'
     )
     user = models.ForeignKey(
@@ -45,8 +44,9 @@ class TempMail(BaseModel):
 
 
 class Message(BaseModel):
-    temp_email = models.ForeignKey(TempMail, on_delete=models.CASCADE, related_name='messages', null=True)
-    message_id = models.CharField(max_length=255)
+    objects = BulkUpdateOrCreateQuerySet.as_manager()
+
+    message_id = models.CharField(max_length=255, primary_key=True)
     from_email = models.EmailField(blank=True, null=True)
     subject = models.CharField(max_length=255, blank=True, null=True)
     body = models.TextField(blank=True, null=True)

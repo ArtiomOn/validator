@@ -12,10 +12,7 @@ class TempMail:
         suffix = '?action=getDomainList'
         response = requests.get(self.url + suffix)
         if response.ok:
-            domains = {
-                "email_domain": response.json()
-            }
-            return domains
+            return {"email_domain": response.json()}
 
     @staticmethod
     def generate_random_user_name():
