@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     # Local apps
     'apps.users',
     'apps.validations',
+    'apps.temp_mail',
 ]
 
 MIDDLEWARE = [
