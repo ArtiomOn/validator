@@ -40,12 +40,13 @@ class DomainSerializer(Serializer):
 
 
 class TempRandomMailSerializer(ModelSerializer):
+    email_domain = serializers.CharField(required=False, allow_null=True)
+    email_username = serializers.CharField(required=False, allow_null=True)
+
     class Meta:
         model = TempMail
         fields = '__all__'
         extra_kwargs = {
             'user': {'read_only': True},
             'temp_email': {'read_only': True},
-            'email_username': {'read_only': True},
-            'email_domain': {'read_only': True},
         }

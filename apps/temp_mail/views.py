@@ -46,14 +46,16 @@ class TempMailViewSet(ExtendedViewSet):
 
     @action(methods=['post'], detail=False, url_path='create_random_temporary_email')
     def create_random_temporary_email(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)  # TODO fix this
-        serializer.is_valid(raise_exception=True)
         username = TempMailHelper.generate_user_name()
         domain = TempMailHelper.generate_domain()
+        data = {
+            'email_username': username,
+            'email_domain': domain
+        }
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
         serializer.save(
-            user=request.user if request.user.is_authenticated else None,
-            email_username=username,
-            email_domain=domain,
+            user=request.user if request.user.is_authenticated else None
         )
         return Response(serializer.data)
 
