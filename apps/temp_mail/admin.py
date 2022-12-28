@@ -8,6 +8,13 @@ class TempMailAdmin(admin.ModelAdmin):
         'temp_email',
         'email_username',
         'email_domain',
+        'user',
+        'created_at',
+    )
+    fields = (
+        'temp_email',
+        'email_username',
+        'email_domain',
         'user'
     )
     list_filter = (
@@ -18,13 +25,16 @@ class TempMailAdmin(admin.ModelAdmin):
         'temp_email',
         'email_username',
         'email_domain',
-        'user__username',
     )
     ordering = (
         'temp_email',
         'email_username',
         'email_domain',
         'user',
+        'created_at',
+    )
+    readonly_fields = (
+        'created_at',
     )
 
 
@@ -37,6 +47,7 @@ class MessageAdmin(admin.ModelAdmin):
         'body',
         'retrieving_date',
         'user',
+        'created_at',
     )
     list_filter = (
         'user',
@@ -46,9 +57,7 @@ class MessageAdmin(admin.ModelAdmin):
         'message_id',
         'from_email',
         'subject',
-        'body',
         'retrieving_date',
-        'user__username',
     )
     ordering = (
         'message_id',
@@ -57,4 +66,8 @@ class MessageAdmin(admin.ModelAdmin):
         'body',
         'retrieving_date',
         'user',
+        'created_at',
+    )
+    readonly_fields = (
+        'created_at',
     )
