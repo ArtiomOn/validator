@@ -160,6 +160,17 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-bulk-update-or-create"
+version = "0.3.0"
+description = "bulk_update_or_create for Django model managers"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+Django = ">=2.2"
+
+[[package]]
 name = "django-filter"
 version = "22.1"
 description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
@@ -919,7 +930,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "4eb5945b55160b7afd1d45e3477213c5d25cd26f59bd96ad3e74cc3418fdea20"
+content-hash = "5af6a45f957cfb65cfb718234cbeb7fe4c6c478cf21fcc615828e600afe98628"
 
 [metadata.files]
 asgiref = [
@@ -1059,6 +1070,10 @@ distlib = [
 django = [
     {file = "Django-4.1.4-py3-none-any.whl", hash = "sha256:0b223bfa55511f950ff741983d408d78d772351284c75e9f77d2b830b6b4d148"},
     {file = "Django-4.1.4.tar.gz", hash = "sha256:d38a4e108d2386cb9637da66a82dc8d0733caede4c83c4afdbda78af4214211b"},
+]
+django-bulk-update-or-create = [
+    {file = "django-bulk-update-or-create-0.3.0.tar.gz", hash = "sha256:1cb7bdf93a7264799c275b26595c1a5060f3091dfd3709e743d710a9758bf9ea"},
+    {file = "django_bulk_update_or_create-0.3.0-py3-none-any.whl", hash = "sha256:c251375e0331d469c2e9b2320e3b3d0f6a1658289ed97520ef230fa096ded645"},
 ]
 django-filter = [
     {file = "django-filter-22.1.tar.gz", hash = "sha256:ed473b76e84f7e83b2511bb2050c3efb36d135207d0128dfe3ae4b36e3594ba5"},

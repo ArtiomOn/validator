@@ -54,7 +54,8 @@ INSTALLED_APPS = [
 
     # Local apps
     'apps.users',
-    'apps.methods',
+    'apps.validations',
+    'apps.temp_mail',
 ]
 
 MIDDLEWARE = [
@@ -96,6 +97,17 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.getenv('NAME'),
+#         'USER': os.getenv('USER'),
+#         'PASSWORD': os.getenv('PASSWORD'),
+#         'HOST': os.getenv('HOST'),
+#         'PORT': os.getenv('PORT'),
+#     }
+# }
 
 AUTH_USER_MODEL = 'users.CustomUser'
 

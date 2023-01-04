@@ -31,28 +31,28 @@ class MethodsTestCase(APITestCase):
         data = {
             "email": 'test@test.com',
         }
-        response = self.client.post("/methods/email/email_check", data=data, **auth(user=self.user))
+        response = self.client.post("/validations/email/email_check", data=data, **auth(user=self.user))
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         data = {
             "email": 'artiom@gmail.com',
         }
-        response = self.client.post("/methods/email/email_check", data=data, **auth(user=self.user))
+        response = self.client.post("/validations/email/email_check", data=data, **auth(user=self.user))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get('/methods/email/user_email', **auth(user=self.user))
+        response = self.client.get('/validations/email/user_email', **auth(user=self.user))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_imei_check(self):
         data = {
             "imei": '123456789012345',
         }
-        response = self.client.post("/methods/imei/imei_check", data=data, **auth(user=self.user))
+        response = self.client.post("/validations/imei/imei_check", data=data, **auth(user=self.user))
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         data = {
             "imei": '511557981902548',
         }
-        response = self.client.post("/methods/imei/imei_check", data=data, **auth(user=self.user))
+        response = self.client.post("/validations/imei/imei_check", data=data, **auth(user=self.user))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get('/methods/imei/user_imei', **auth(user=self.user))
+        response = self.client.get('/validations/imei/user_imei', **auth(user=self.user))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.post('/methods/imei/generate_imei', **auth(user=self.user))
+        response = self.client.post('/validations/imei/generate_imei', **auth(user=self.user))
         self.assertEqual(response.status_code, status.HTTP_200_OK)

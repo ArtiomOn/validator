@@ -20,7 +20,8 @@ urlpatterns = [
     path('', schema_view.with_ui('swagger', cache_timeout=0),  # noqa
          name='schema-swagger-ui'),
     path('users/', include('apps.users.urls')),
-    path('methods/', include('apps.methods.urls')),
+    path('validations/', include('apps.validations.urls')),
+    path('temp_mail/', include('apps.temp_mail.urls')),
     path('admin', admin.site.urls),
     path('jwt/', include([
         path('token', TokenObtainPairView.as_view(), name='token_obtain-pair'),
