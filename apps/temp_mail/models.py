@@ -1,4 +1,3 @@
-from bulk_update_or_create import BulkUpdateOrCreateQuerySet
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -21,14 +20,16 @@ class TempMail(BaseModel):
         null=True,
         blank=True
     )
+    messages = models.ManyToManyField(
+        'Message',
+        related_name='temp_email',
+        blank=True,
+    )
 
     class Meta:
         verbose_name = 'Temporary mail'
         verbose_name_plural = 'Temporary mails'
         ordering = ('-created_at',)
-
-    def __str__(self):
-        return self.temp_email
 
     def save(
             self,
@@ -44,9 +45,7 @@ class TempMail(BaseModel):
 
 
 class Message(BaseModel):
-    objects = BulkUpdateOrCreateQuerySet.as_manager()
-
-    message_id = models.CharField(max_length=255, primary_key=True)
+    message_id = models.IntegerField(primary_key=True)
     from_email = models.EmailField(blank=True, null=True)
     subject = models.CharField(max_length=255, blank=True, null=True)
     body = models.TextField(blank=True, null=True)
@@ -56,7 +55,4 @@ class Message(BaseModel):
     class Meta:
         verbose_name = 'Message'
         verbose_name_plural = 'Messages'
-        ordering = ('-retrieving_date',)
-
-    def __str__(self):
-        return self.message_id
+        ordering = ('-created_at',)

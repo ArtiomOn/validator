@@ -15,6 +15,7 @@ class TempMailAdmin(admin.ModelAdmin):
         'temp_email',
         'email_username',
         'email_domain',
+        'messages',
         'user'
     )
     list_filter = (

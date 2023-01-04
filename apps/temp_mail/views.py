@@ -5,13 +5,13 @@ from rest_framework.response import Response
 
 from apps.common.views import ExtendedViewSet
 from apps.temp_mail.helpers import TempMailHelper
-from apps.temp_mail.models import TempMail, Message
+from apps.temp_mail.models import TempMail
 from apps.temp_mail.scrapping.scrapping import TempMail as TempMailScrapping
 from apps.temp_mail.serializers import (
-    TempMailSerializer,
-    DomainSerializer,
+    CreateTempMailSerializer,
     TempMailMessageSerializer,
-    TempRandomMailSerializer
+    TempMailSerializer,
+    TempMailDomainSerializer
 )
 
 
@@ -22,9 +22,12 @@ class TempMailViewSet(ExtendedViewSet):
         'user_emails': [IsAuthenticated],
     }
     serializers_by_action = {
-        'default': TempMailSerializer,
-        'get_all_domains': DomainSerializer,
-        'create_random_temporary_email': TempRandomMailSerializer
+        'default': CreateTempMailSerializer,
+        'get_all_domains': TempMailDomainSerializer,
+        'create_random_temporary_email': CreateTempMailSerializer,
+        'user_emails': TempMailSerializer,
+        'save_messages': TempMailMessageSerializer,
+        'check_mailbox': TempMailMessageSerializer,
     }
 
     @action(methods=['get'], detail=False, url_path='get_all_domains')
@@ -47,10 +50,10 @@ class TempMailViewSet(ExtendedViewSet):
     @action(methods=['post'], detail=False, url_path='create_random_temporary_email')
     def create_random_temporary_email(self, request, *args, **kwargs):
         username = TempMailHelper.generate_user_name()
-        domain = TempMailHelper.generate_domain()
+        domain = TempMailHelper.random_domain()
         data = {
             'email_username': username,
-            'email_domain': domain
+            'email_domain': domain,
         }
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -65,26 +68,23 @@ class TempMailViewSet(ExtendedViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-
-class MessageViewSet(ExtendedViewSet):
-    queryset = Message.objects.all()
-    serializer_class = TempMailMessageSerializer
-    permission_by_action = {
-        'default': (AllowAny,),
-    }
+    @action(methods=['post'], detail=False, url_path='save_messages')
+    def save_messages(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        mail_helper = TempMailHelper()
+        mail_helper.get_messages(
+            validated_data=serializer.validated_data,
+            user=request.user
+        )
+        return Response(status=status.HTTP_200_OK)
 
     @action(methods=['post'], detail=False, url_path='check_mailbox')
     def check_mailbox(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        message_data = TempMailHelper.get_messages(
-            validated_data=serializer.validated_data,
-            user=request.user
+        queryset = TempMail.objects.get(
+            temp_email=serializer.validated_data['temp_email']
         )
-        if not message_data:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        messages, bulk_data = message_data
-        serializer.save(
-            messages=bulk_data,
-        )
-        return Response(TempMailMessageSerializer(messages).data)
+
+        return Response(TempMailSerializer(queryset).data)

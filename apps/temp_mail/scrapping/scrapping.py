@@ -21,27 +21,28 @@ class TempMail:
         return username
 
     def check_mailbox(self, username, domain):
-        notification_objects = {}
+        temp_mail = {}
         suffix = f"?action=getMessages&login={username}&domain={domain}"
         request = requests.get(self.url + suffix)
         if not request.ok:
             return request.json()
         req_length = len(request.json())
         if not req_length:
-            return notification_objects
+            return temp_mail
         email_ids = [request.json()[i]['id'] for i in range(req_length)]
-        notification_objects[f"{username}@{domain}"] = []
+        temp_mail[f"{username}@{domain}"] = []
         for email_id in email_ids:
             suffix = f"?action=readMessage&login={username}&domain={domain}&id={email_id}"
             request = requests.get(self.url + suffix)
             if not request.ok:
                 return request.json()
-            notification_object = {
-                "id": request.json()['id'],
-                "from": request.json()['from'],
-                "subject": request.json()['subject'],
-                "body": request.json()['textBody'],
-                "date": request.json()['date'],
-            }
-            notification_objects[f"{username}@{domain}"].append(notification_object)
-        return notification_objects
+            temp_mail[f"{username}@{domain}"].append(
+                {
+                    "id": request.json()['id'],
+                    "from": request.json()['from'],
+                    "subject": request.json()['subject'],
+                    "body": request.json()['textBody'],
+                    "date": request.json()['date'],
+                }
+            )
+        return temp_mail
