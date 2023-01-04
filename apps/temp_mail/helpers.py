@@ -4,26 +4,20 @@ from datetime import datetime
 
 from django.utils.timezone import make_aware
 
-from apps.temp_mail.models import Message, TempMail
-
 from apps.temp_mail.scrapping.scrapping import TempMail as TempMailScrapping
 
 
 class DomainChoices:
-    DOMAIN_CHOICES = (
-        ("1secmail.com", "1secmail.com"),
-        ("1secmail.org", "1secmail.org"),
-        ("1secmail.net", "1secmail.net"),
-        ("wwjmp.com", "wwjmp.com"),
-        ("esiix.com", "esiix.com"),
-        ("xojxe.com", "xojxe.com"),
-        ("yoggm.com", "yoggm.com"),
-    ),
+    temp_mail = TempMailScrapping()
+    domains = temp_mail.get_all_domains()['email_domain']
+    DOMAIN_CHOICES = tuple([(domain, domain) for domain in domains])
 
 
 class TempMailHelper:
     @staticmethod
     def _payload(messages, **kwargs):
+        from apps.temp_mail.models import Message
+
         data = []
         email = kwargs.get('email')
         user = kwargs.get('user')
@@ -45,6 +39,8 @@ class TempMailHelper:
         return data
 
     def get_messages(self, validated_data, user):
+        from apps.temp_mail.models import TempMail
+
         mail_scrapping = TempMailScrapping()
         temp_mail = validated_data.get('temp_email')
         if not temp_mail:
@@ -76,6 +72,7 @@ class TempMailHelper:
 
     @staticmethod
     def create_message(payload):
+        from apps.temp_mail.models import Message
         return Message.objects.bulk_create(
             objs=payload,
             ignore_conflicts=True

@@ -34,17 +34,17 @@ class MethodsTestCase(APITestCase):
             "/temp_mail/temp_mail/get_all_domains",
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = {
+            "email_username": TempMailHelper.generate_user_name(),
+            "email_domain": TempMailHelper.random_domain(),
+        }
         response = self.client.post(
             "/temp_mail/temp_mail/create_temporary_email",
-            data={
-                "email_username": TempMailHelper.generate_user_name(),
-                "email_domain": TempMailHelper.generate_domain(),
-            }
+            data=data,
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response = self.client.post(
             "/temp_mail/temp_mail/create_random_temporary_email",
-            data={},
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response = self.client.get(
@@ -54,11 +54,28 @@ class MethodsTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_check_mailbox(self):
-        temp_mail = TempMailHelper.generate_user_name() + "@" + TempMailHelper.generate_domain()
-        # No messages in mailbox
+        email_username = TempMailHelper.generate_user_name()
+        email_domain = TempMailHelper.random_domain()
+        temp_mail = f"{email_username}@{email_domain}"
+
+        data = {
+            "email_username": email_username,
+            "email_domain": email_domain,
+        }
         response = self.client.post(
-            "/temp_mail/message/check_mailbox",
+            "/temp_mail/temp_mail/create_temporary_email",
+            data=data,
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.post(
+            '/temp_mail/temp_mail/save_messages',
+            data={"temp_email": temp_mail}
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.client.post(
+            "/temp_mail/temp_mail/check_mailbox",
             data={'temp_email': temp_mail},
             **auth(self.user)
         )
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from apps.common.models import BaseModel
+from apps.temp_mail.helpers import DomainChoices
 
 User = get_user_model()
 
@@ -11,7 +12,8 @@ class TempMail(BaseModel):
     email_username = models.CharField(max_length=255)
     email_domain = models.CharField(
         max_length=255,
-        default='1secmail.com'
+        choices=DomainChoices.DOMAIN_CHOICES,
+        default=DomainChoices.DOMAIN_CHOICES[0][0]
     )
     user = models.ForeignKey(
         User,

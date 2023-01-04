@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework.serializers import ModelSerializer
 
-from apps.temp_mail.models import TempMail, Message
 from apps.temp_mail.helpers import DomainChoices
+from apps.temp_mail.models import TempMail, Message
 
 
 class MessageSerializer(ModelSerializer):
@@ -29,8 +29,7 @@ class TempMailMessageSerializer(ModelSerializer):
 
 class CreateTempMailSerializer(ModelSerializer):
     email_username = serializers.CharField(required=True)
-    # email_domain = serializers.ChoiceField(choices=DomainChoices.DOMAIN_CHOICES, required=True)
-    email_domain = serializers.CharField(required=True)
+    email_domain = serializers.ChoiceField(choices=DomainChoices.DOMAIN_CHOICES, required=True)
 
     class Meta:
         model = TempMail
