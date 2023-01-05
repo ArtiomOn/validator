@@ -72,3 +72,6 @@ class Domain(BaseModel):
         verbose_name = 'Domain'
         verbose_name_plural = 'Domains'
         ordering = ('-created_at',)
+
+    def __str__(self):
+        return self.domain

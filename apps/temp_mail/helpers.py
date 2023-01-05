@@ -71,9 +71,3 @@ class TempMailHelper:
             objs=payload,
             ignore_conflicts=True
         )
-
-    @staticmethod
-    def random_domain():
-        temp_mail = TempMailScrapping()
-        domain = temp_mail.get_all_domains()
-        return random.choice(domain['email_domain'])

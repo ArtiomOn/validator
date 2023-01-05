@@ -1,6 +1,5 @@
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
@@ -19,7 +18,7 @@ __all__ = [
 ]
 
 
-class TempMailViewSet(ExtendedViewSet, ListModelMixin):
+class TempMailViewSet(ExtendedViewSet):
     queryset = TempMail.objects.all()
     permission_by_action = {
         'default': [AllowAny],
@@ -57,10 +56,10 @@ class TempMailViewSet(ExtendedViewSet, ListModelMixin):
     @action(methods=['post'], detail=False, url_path='create_random_temporary_email')
     def create_random_temporary_email(self, request, *args, **kwargs):
         username = TempMailHelper.generate_user_name()
-        domain = TempMailHelper.random_domain()
+        domain = Domain.objects.order_by('?').first()
         data = {
             'email_username': username,
-            'email_domain': domain,
+            'email_domain_id': domain.id,
         }
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
