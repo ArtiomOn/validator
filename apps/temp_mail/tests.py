@@ -12,7 +12,7 @@ User = get_user_model()
 fake = Faker()
 
 
-def auth(user=None, token=None):
+def auth(user):
     refresh = RefreshToken.for_user(user)
     return {
         "HTTP_AUTHORIZATION": f"Bearer {refresh.access_token}"
@@ -28,7 +28,6 @@ class MethodsTestCase(APITestCase):
             email=fake.email(),
             password="test1234",
         )
-
 
         self.domain = Domain.objects.first()
 
