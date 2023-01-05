@@ -1,21 +1,25 @@
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from apps.common.views import ExtendedViewSet
 from apps.temp_mail.helpers import TempMailHelper
-from apps.temp_mail.models import TempMail
-from apps.temp_mail.scrapping.scrapping import TempMail as TempMailScrapping
+from apps.temp_mail.models import TempMail, Domain
 from apps.temp_mail.serializers import (
     CreateTempMailSerializer,
     TempMailMessageSerializer,
     TempMailSerializer,
-    TempMailDomainSerializer
+    DomainSerializer
 )
 
+__all__ = [
+    'TempMailViewSet',
+]
 
-class TempMailViewSet(ExtendedViewSet):
+
+class TempMailViewSet(ExtendedViewSet, ListModelMixin):
     queryset = TempMail.objects.all()
     permission_by_action = {
         'default': [AllowAny],
@@ -23,19 +27,22 @@ class TempMailViewSet(ExtendedViewSet):
     }
     serializers_by_action = {
         'default': CreateTempMailSerializer,
-        'get_all_domains': TempMailDomainSerializer,
+        'get_all_domains': DomainSerializer,
         'create_random_temporary_email': CreateTempMailSerializer,
         'user_emails': TempMailSerializer,
         'save_messages': TempMailMessageSerializer,
         'check_mailbox': TempMailMessageSerializer,
     }
 
+    def get_queryset(self):
+        if self.action == 'get_all_domains':
+            return Domain.objects.all()
+        return super(TempMailViewSet, self).get_queryset()
+
     @action(methods=['get'], detail=False, url_path='get_all_domains')
     def get_all_domains(self, request, *args, **kwargs):
-        temp_mail = TempMailScrapping()
-        domains = temp_mail.get_all_domains()
-        serializer = self.get_serializer(data=domains)
-        serializer.is_valid(raise_exception=True)
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
     @action(methods=['post'], detail=False, url_path='create_temporary_email')

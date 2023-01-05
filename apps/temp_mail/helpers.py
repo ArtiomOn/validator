@@ -7,12 +7,6 @@ from django.utils.timezone import make_aware
 from apps.temp_mail.scrapping.scrapping import TempMail as TempMailScrapping
 
 
-class DomainChoices:
-    temp_mail = TempMailScrapping()
-    domains = temp_mail.get_all_domains()['email_domain']
-    DOMAIN_CHOICES = tuple([(domain, domain) for domain in domains])
-
-
 class TempMailHelper:
     @staticmethod
     def _payload(messages, **kwargs):
