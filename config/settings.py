@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django_filters',
 
     # Local apps
+    'apps.common',
     'apps.users',
     'apps.validations',
     'apps.temp_mail',

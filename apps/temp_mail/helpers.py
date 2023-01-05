@@ -7,12 +7,6 @@ from django.utils.timezone import make_aware
 from apps.temp_mail.scrapping.scrapping import TempMail as TempMailScrapping
 
 
-class DomainChoices:
-    temp_mail = TempMailScrapping()
-    domains = temp_mail.get_all_domains()['email_domain']
-    DOMAIN_CHOICES = tuple([(domain, domain) for domain in domains])
-
-
 class TempMailHelper:
     @staticmethod
     def _payload(messages, **kwargs):
@@ -77,9 +71,3 @@ class TempMailHelper:
             objs=payload,
             ignore_conflicts=True
         )
-
-    @staticmethod
-    def random_domain():
-        temp_mail = TempMailScrapping()
-        domain = temp_mail.get_all_domains()
-        return random.choice(domain['email_domain'])

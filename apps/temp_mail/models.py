@@ -2,18 +2,23 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from apps.common.models import BaseModel
-from apps.temp_mail.helpers import DomainChoices
 
 User = get_user_model()
+
+__all__ = [
+    "TempMail",
+    "Message",
+    "Domain",
+]
 
 
 class TempMail(BaseModel):
     temp_email = models.EmailField(blank=True, null=True, unique=True)
     email_username = models.CharField(max_length=255)
-    email_domain = models.CharField(
-        max_length=255,
-        choices=DomainChoices.DOMAIN_CHOICES,
-        default=DomainChoices.DOMAIN_CHOICES[0][0]
+    email_domain = models.ForeignKey(
+        'Domain',
+        on_delete=models.CASCADE,
+        related_name='temp_mail'
     )
     user = models.ForeignKey(
         User,
@@ -58,3 +63,15 @@ class Message(BaseModel):
         verbose_name = 'Message'
         verbose_name_plural = 'Messages'
         ordering = ('-created_at',)
+
+
+class Domain(BaseModel):
+    domain = models.CharField(max_length=255, unique=True)
+
+    class Meta:
+        verbose_name = 'Domain'
+        verbose_name_plural = 'Domains'
+        ordering = ('-created_at',)
+
+    def __str__(self):
+        return self.domain
