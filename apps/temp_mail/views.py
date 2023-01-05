@@ -83,9 +83,9 @@ class TempMailViewSet(ExtendedViewSet):
     def check_mailbox(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        queryset = TempMail.objects.get(
+        queryset = TempMail.objects.filter(
             temp_email=serializer.validated_data['temp_email']
-        )
+        ).last()
         if not queryset:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            raise ValueError('Email not found')
         return Response(TempMailSerializer(queryset).data)
