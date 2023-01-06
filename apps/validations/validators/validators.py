@@ -26,8 +26,11 @@ class EmailValidator:
             )
         except DNSTimeoutError:
             raise ValidationError("Service is unavailable")
-        if not is_valid:
+        except Exception:
             raise ValidationError("Email is invalid")
+        else:
+            if not is_valid:
+                raise ValidationError("Email is invalid")
 
 
 class IMEIValidator:
