@@ -16,5 +16,5 @@ jobs:
     - uses: pre-commit/action@v4.4.0
       with:
         extra_args:
-                - flake8 --all-files
-                - black --check --diff --line-length 120
+          - flake8 --all-files
+          - black --check --diff --line-length 120
