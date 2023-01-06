@@ -32,6 +32,7 @@ class EmailValidator:
 
 class IMEIValidator:
 
+    # noinspection DuplicatedCode
     def __call__(self, imei: str):
         # Check IMEI length (15 digits)
         if not re.match(r"^\d{15}$", imei):
