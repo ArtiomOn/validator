@@ -10,6 +10,8 @@ class Command(BaseCommand):
 
         mail_scrapping = TempMailScrapping()
         domains = mail_scrapping.get_all_domains()["email_domain"]
+        if not domains:
+            raise Exception("Domains not found")
         data = []
         for domain in domains:
             data.append(Domain(domain=domain))
