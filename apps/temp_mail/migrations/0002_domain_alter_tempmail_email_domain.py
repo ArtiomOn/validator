@@ -7,27 +7,29 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('temp_mail', '0001_initial'),
+        ("temp_mail", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Domain',
+            name="Domain",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
-                ('domain', models.CharField(max_length=255, unique=True)),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("created_at", models.DateTimeField(auto_now_add=True, null=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, null=True)),
+                ("domain", models.CharField(max_length=255, unique=True)),
             ],
             options={
-                'verbose_name': 'Domain',
-                'verbose_name_plural': 'Domains',
-                'ordering': ('-created_at',),
+                "verbose_name": "Domain",
+                "verbose_name_plural": "Domains",
+                "ordering": ("-created_at",),
             },
         ),
         migrations.AlterField(
-            model_name='tempmail',
-            name='email_domain',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='temp_mail', to='temp_mail.domain'),
+            model_name="tempmail",
+            name="email_domain",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name="temp_mail", to="temp_mail.domain"
+            ),
         ),
     ]

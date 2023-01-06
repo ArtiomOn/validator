@@ -6,33 +6,29 @@ from apps.validations.validators.validators import EmailValidator, IMEIValidator
 
 class EmailSerializer(ModelSerializer):
     email = CharField(
-        validators=[
-            EmailValidator()
-        ],
+        validators=[EmailValidator()],
         required=True,
     )
 
     class Meta:
         model = Email
-        fields = '__all__'
+        fields = "__all__"
         extra_kwargs = {
-            'is_valid': {'read_only': True},
-            'user': {'read_only': True},
+            "is_valid": {"read_only": True},
+            "user": {"read_only": True},
         }
 
 
 class IMEISerializer(ModelSerializer):
     imei = CharField(
-        validators=[
-            IMEIValidator()
-        ],
+        validators=[IMEIValidator()],
         required=True,
     )
 
     class Meta:
         model = IMEI
-        fields = '__all__'
+        fields = "__all__"
         extra_kwargs = {
-            'is_valid': {'read_only': True},
-            'user': {'read_only': True},
+            "is_valid": {"read_only": True},
+            "user": {"read_only": True},
         }

@@ -5,18 +5,18 @@ from rest_framework.serializers import ModelSerializer
 User = get_user_model()
 
 __all__ = (
-    'UserRegisterSerializer',
-    'UserListSerializer',
+    "UserRegisterSerializer",
+    "UserListSerializer",
 )
 
 
 class UserRegisterSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ('email', 'password')
+        fields = ("email", "password")
 
 
 class UserListSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'email', 'is_staff', 'is_active')
+        fields = ("id", "email", "is_staff", "is_active")

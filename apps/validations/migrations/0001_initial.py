@@ -15,35 +15,48 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='IMEI',
+            name="IMEI",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
-                ('imei', models.CharField(max_length=15)),
-                ('is_valid', models.BooleanField(blank=True, default=False, null=True)),
-                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='imeis', to=settings.AUTH_USER_MODEL)),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("created_at", models.DateTimeField(auto_now_add=True, null=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, null=True)),
+                ("imei", models.CharField(max_length=15)),
+                ("is_valid", models.BooleanField(blank=True, default=False, null=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="imeis",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'IMEI',
-                'verbose_name_plural': 'IMEIs',
-                'ordering': ['created_at'],
+                "verbose_name": "IMEI",
+                "verbose_name_plural": "IMEIs",
+                "ordering": ["created_at"],
             },
         ),
         migrations.CreateModel(
-            name='Email',
+            name="Email",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
-                ('email', models.EmailField(max_length=254)),
-                ('is_valid', models.BooleanField(blank=True, default=False, null=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='emails', to=settings.AUTH_USER_MODEL)),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("created_at", models.DateTimeField(auto_now_add=True, null=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, null=True)),
+                ("email", models.EmailField(max_length=254)),
+                ("is_valid", models.BooleanField(blank=True, default=False, null=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, related_name="emails", to=settings.AUTH_USER_MODEL
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Email',
-                'verbose_name_plural': 'Emails',
-                'ordering': ['created_at'],
+                "verbose_name": "Email",
+                "verbose_name_plural": "Emails",
+                "ordering": ["created_at"],
             },
         ),
     ]
