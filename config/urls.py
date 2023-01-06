@@ -9,23 +9,23 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
     openapi.Info(
-        title='Project API',
-        default_version='v1',
+        title="Project API",
+        default_version="v1",
     ),
     public=True,
     permission_classes=[permissions.AllowAny],
 )
 
 urlpatterns = [
-    path('', schema_view.with_ui('swagger', cache_timeout=0),  # noqa
-         name='schema-swagger-ui'),
-    path('users/', include('apps.users.urls')),
-    path('validations/', include('apps.validations.urls')),
-    path('temp_mail/', include('apps.temp_mail.urls')),
-    path('admin', admin.site.urls),
-    path('jwt/', include([
-        path('token', TokenObtainPairView.as_view(), name='token_obtain-pair'),
-        path('token/refresh', TokenRefreshView.as_view(), name='token-refresh'),
-        path('token/verify', TokenVerifyView.as_view(), name='token-verify'),
+    path("", schema_view.with_ui("swagger", cache_timeout=0),  # noqa
+         name="schema-swagger-ui"),
+    path("users/", include("apps.users.urls")),
+    path("validations/", include("apps.validations.urls")),
+    path("temp_mail/", include("apps.temp_mail.urls")),
+    path("admin", admin.site.urls),
+    path("jwt/", include([
+        path("token", TokenObtainPairView.as_view(), name="token_obtain-pair"),
+        path("token/refresh", TokenRefreshView.as_view(), name="token-refresh"),
+        path("token/verify", TokenVerifyView.as_view(), name="token-verify"),
     ])),
 ]

@@ -11,38 +11,38 @@ from apps.users.serializers import UserRegisterSerializer, UserListSerializer
 User = get_user_model()
 
 __all__ = (
-    'UserViewSet',
+    "UserViewSet",
 )
 
 
 class UserViewSet(ExtendedViewSet, ListModelMixin):
     queryset = User.objects.all()
     permission_by_action = {
-        'register': [AllowAny],
-        'list': [IsAdminUser],
+        "register": [AllowAny],
+        "list": [IsAdminUser],
     }
     serializers_by_action = {
-        'default': UserListSerializer,
-        'register': UserRegisterSerializer,
-        'list': UserListSerializer,
+        "default": UserListSerializer,
+        "register": UserRegisterSerializer,
+        "list": UserListSerializer,
     }
 
     @action(
-        methods=['POST'],
+        methods=["POST"],
         detail=False,
-        url_path='register',
-        url_name='user-register',
+        url_path="register",
+        url_name="user-register",
     )
     def register(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        email = serializer.validated_data.get('email', None)
-        password = serializer.validated_data.get('password', None)
+        email = serializer.validated_data.get("email", None)
+        password = serializer.validated_data.get("password", None)
         user = serializer.save(username=email)
         user.set_password(password)
         user.save()
         refresh: RefreshToken = RefreshToken.for_user(user)
         return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token)
+            "refresh": str(refresh),
+            "access": str(refresh.access_token)
         })

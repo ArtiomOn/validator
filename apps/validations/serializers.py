@@ -14,10 +14,10 @@ class EmailSerializer(ModelSerializer):
 
     class Meta:
         model = Email
-        fields = '__all__'
+        fields = "__all__"
         extra_kwargs = {
-            'is_valid': {'read_only': True},
-            'user': {'read_only': True},
+            "is_valid": {"read_only": True},
+            "user": {"read_only": True},
         }
 
 
@@ -31,8 +31,8 @@ class IMEISerializer(ModelSerializer):
 
     class Meta:
         model = IMEI
-        fields = '__all__'
+        fields = "__all__"
         extra_kwargs = {
-            'is_valid': {'read_only': True},
-            'user': {'read_only': True},
+            "is_valid": {"read_only": True},
+            "user": {"read_only": True},
         }

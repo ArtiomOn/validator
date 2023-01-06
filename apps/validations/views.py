@@ -13,12 +13,12 @@ class EmailViewSet(ExtendedRetrieveUpdateDestroyAPIView):
     queryset = Email.objects.all()
     serializer_class = EmailSerializer
     permission_by_action = {
-        'default': [IsAuthenticated],
-        'delete': [IsAdminUser],
-        'update': [IsAdminUser],
+        "default": [IsAuthenticated],
+        "delete": [IsAdminUser],
+        "update": [IsAdminUser],
     }
 
-    @action(detail=False, methods=['post'], url_path='email_check', url_name='email_check')
+    @action(detail=False, methods=["post"], url_path="email_check", url_name="email_check")
     def email_check(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -29,7 +29,7 @@ class EmailViewSet(ExtendedRetrieveUpdateDestroyAPIView):
             )
         return Response(serializer.data)
 
-    @action(detail=False, methods=['get'], url_path='user_email', url_name='user_email')
+    @action(detail=False, methods=["get"], url_path="user_email", url_name="user_email")
     def user_email(self, request, *args, **kwargs):
         queryset = self.queryset.filter(user=request.user)
         serializer = self.get_serializer(queryset, many=True)
@@ -43,13 +43,13 @@ class IMEIViewSet(ExtendedRetrieveUpdateDestroyAPIView):
         "default": IMEISerializer,
     }
     permission_by_action = {
-        'default': [IsAuthenticated],
-        'generate_imei': [AllowAny],
-        'delete': [IsAdminUser],
-        'update': [IsAdminUser],
+        "default": [IsAuthenticated],
+        "generate_imei": [AllowAny],
+        "delete": [IsAdminUser],
+        "update": [IsAdminUser],
     }
 
-    @action(detail=False, methods=['post'], url_path='imei_check', url_name='imei_check')
+    @action(detail=False, methods=["post"], url_path="imei_check", url_name="imei_check")
     def imei_check(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -60,10 +60,10 @@ class IMEIViewSet(ExtendedRetrieveUpdateDestroyAPIView):
             )
         return Response(serializer.data)
 
-    @action(detail=False, methods=['post'], url_path='generate_imei', url_name='generate_imei')
+    @action(detail=False, methods=["post"], url_path="generate_imei", url_name="generate_imei")
     def generate_imei(self, request, *args, **kwargs):
         imei = ImeiGenerator().generate()
-        serializer = self.get_serializer(data={'imei': imei})
+        serializer = self.get_serializer(data={"imei": imei})
         serializer.is_valid(raise_exception=True)
         if request.user.is_authenticated:
             serializer.save(
@@ -72,7 +72,7 @@ class IMEIViewSet(ExtendedRetrieveUpdateDestroyAPIView):
             )
         return Response(serializer.data)
 
-    @action(detail=False, methods=['get'], url_path='user_imei', url_name='user_imei')
+    @action(detail=False, methods=["get"], url_path="user_imei", url_name="user_imei")
     def user_imei(self, request, *args, **kwargs):
         queryset = self.queryset.filter(user=request.user)
         serializer = self.get_serializer(queryset, many=True)

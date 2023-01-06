@@ -44,7 +44,7 @@ class IMEIValidator:
         # Multiply every second element with 2
         check_imei = [int(num) * 2 if idx % 2 != 0 else int(num) for idx, num in enumerate(check_imei)]
         # Separate imei into single digits and sum them
-        imei_sum = sum(list(map(int, ''.join(str(e) for e in check_imei))))
+        imei_sum = sum(list(map(int, "".join(str(e) for e in check_imei))))
         # Round it up to the nearest multiple of ten
         rounded_imei = self.round_up_multiple(imei_sum)
         # Subtract original number from the rounded-up number

@@ -23,7 +23,7 @@ class MethodsTestCase(APITestCase):
 
     def setUp(self) -> None:
         #  call command to create domains
-        call_command('update_domains')
+        call_command("update_domains")
         self.user = User.objects.create(
             email=fake.email(),
             password="test1234",
@@ -70,14 +70,14 @@ class MethodsTestCase(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response = self.client.post(
-            '/temp_mail/temp_mail/save_messages',
+            "/temp_mail/temp_mail/save_messages",
             data={"temp_email": temp_mail}
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         response = self.client.post(
             "/temp_mail/temp_mail/check_mailbox",
-            data={'temp_email': temp_mail},
+            data={"temp_email": temp_mail},
             **auth(self.user)
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)

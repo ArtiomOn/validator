@@ -7,7 +7,7 @@ from rest_framework.generics import (
 )
 from rest_framework.viewsets import GenericViewSet
 
-DEFAULT = 'default'
+DEFAULT = "default"
 
 
 class ExtendedViewSet(GenericViewSet):
@@ -20,7 +20,7 @@ class ExtendedViewSet(GenericViewSet):
         return super(ExtendedViewSet, self).get_serializer_class()
 
     def get_permissions(self):
-        if self.action in self.permission_by_action or 'default' in self.permission_by_action:
+        if self.action in self.permission_by_action or "default" in self.permission_by_action:
             try:
                 return [permission() for permission in self.permission_by_action[self.action]]
             except KeyError:
