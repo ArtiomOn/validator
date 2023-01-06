@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from apps.common.views import ExtendedRetrieveUpdateDestroyAPIView
 from apps.validations.models import Email, IMEI
 from apps.validations.serializers import EmailSerializer, IMEISerializer
-from apps.validations.validators.generators import ImeiGenerator
+from apps.validations.validators.imei_generator import ImeiGenerator
 
 
 # noinspection DuplicatedCode

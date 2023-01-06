@@ -1,7 +1,8 @@
 from rest_framework.serializers import ModelSerializer, CharField
 
 from apps.validations.models import Email, IMEI
-from apps.validations.validators.validators import EmailValidator, IMEIValidator
+from apps.validations.validators.imei_validator import IMEIValidator
+from apps.validations.validators.email_validator import EmailValidator
 
 
 class EmailSerializer(ModelSerializer):
