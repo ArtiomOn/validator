@@ -36,7 +36,6 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = [
     # Jazzmin
     "jazzmin",
-
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -44,14 +43,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     # Third party apps
     "rest_framework",
     "drf_yasg",
     "rest_framework_swagger",
     "rest_framework_simplejwt",
     "django_filters",
-
     # Local apps
     "apps.common",
     "apps.users",
@@ -158,10 +155,11 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 20,
-    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend",
-                                "rest_framework.filters.SearchFilter",
-                                "rest_framework.filters.OrderingFilter",
-                                ],
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
+    ],
 }
 
 SIMPLE_JWT = {
@@ -171,12 +169,4 @@ SIMPLE_JWT = {
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
 }
 
-SWAGGER_SETTINGS = {
-    "SECURITY_DEFINITIONS": {
-        "Token": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
-        }
-    }
-}
+SWAGGER_SETTINGS = {"SECURITY_DEFINITIONS": {"Token": {"type": "apiKey", "name": "Authorization", "in": "header"}}}

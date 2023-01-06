@@ -11,13 +11,7 @@ class TempMailAdmin(admin.ModelAdmin):
         "user",
         "created_at",
     )
-    fields = (
-        "temp_email",
-        "email_username",
-        "email_domain",
-        "messages",
-        "user"
-    )
+    fields = ("temp_email", "email_username", "email_domain", "messages", "user")
     list_filter = (
         "email_domain",
         "user",
@@ -34,9 +28,7 @@ class TempMailAdmin(admin.ModelAdmin):
         "user",
         "created_at",
     )
-    readonly_fields = (
-        "created_at",
-    )
+    readonly_fields = ("created_at",)
 
 
 @admin.register(Message)
@@ -50,9 +42,7 @@ class MessageAdmin(admin.ModelAdmin):
         "user",
         "created_at",
     )
-    list_filter = (
-        "user",
-    )
+    list_filter = ("user",)
     search_fields = (
         "temp_email",
         "message_id",
@@ -69,6 +59,4 @@ class MessageAdmin(admin.ModelAdmin):
         "user",
         "created_at",
     )
-    readonly_fields = (
-        "created_at",
-    )
+    readonly_fields = ("created_at",)

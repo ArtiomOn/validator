@@ -10,9 +10,7 @@ from apps.users.serializers import UserRegisterSerializer, UserListSerializer
 
 User = get_user_model()
 
-__all__ = (
-    "UserViewSet",
-)
+__all__ = ("UserViewSet",)
 
 
 class UserViewSet(ExtendedViewSet, ListModelMixin):
@@ -42,7 +40,4 @@ class UserViewSet(ExtendedViewSet, ListModelMixin):
         user.set_password(password)
         user.save()
         refresh: RefreshToken = RefreshToken.for_user(user)
-        return Response({
-            "refresh": str(refresh),
-            "access": str(refresh.access_token)
-        })
+        return Response({"refresh": str(refresh), "access": str(refresh.access_token)})

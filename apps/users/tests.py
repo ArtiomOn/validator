@@ -11,17 +11,12 @@ fake = Faker()
 
 def auth(user=None, token=None):
     if token:
-        return {
-            "HTTP_AUTHORIZATION": f"Bearer {token}"
-        }
+        return {"HTTP_AUTHORIZATION": f"Bearer {token}"}
     refresh = RefreshToken.for_user(user)
-    return {
-        "HTTP_AUTHORIZATION": f"Bearer {refresh.access_token}"
-    }
+    return {"HTTP_AUTHORIZATION": f"Bearer {refresh.access_token}"}
 
 
 class UserTestCase(APITestCase):
-
     def setUp(self) -> None:
         self.user = User.objects.create(
             email=fake.email(),

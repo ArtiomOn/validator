@@ -14,13 +14,10 @@ fake = Faker()
 
 def auth(user):
     refresh = RefreshToken.for_user(user)
-    return {
-        "HTTP_AUTHORIZATION": f"Bearer {refresh.access_token}"
-    }
+    return {"HTTP_AUTHORIZATION": f"Bearer {refresh.access_token}"}
 
 
 class MethodsTestCase(APITestCase):
-
     def setUp(self) -> None:
         #  call command to create domains
         call_command("update_domains")
@@ -49,10 +46,7 @@ class MethodsTestCase(APITestCase):
             "/temp_mail/temp_mail/create_random_temporary_email",
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.get(
-            "/temp_mail/temp_mail/user_emails",
-            **auth(self.user)
-        )
+        response = self.client.get("/temp_mail/temp_mail/user_emails", **auth(self.user))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_check_mailbox(self):
@@ -69,15 +63,10 @@ class MethodsTestCase(APITestCase):
             data=data,
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.post(
-            "/temp_mail/temp_mail/save_messages",
-            data={"temp_email": temp_mail}
-        )
+        response = self.client.post("/temp_mail/temp_mail/save_messages", data={"temp_email": temp_mail})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         response = self.client.post(
-            "/temp_mail/temp_mail/check_mailbox",
-            data={"temp_email": temp_mail},
-            **auth(self.user)
+            "/temp_mail/temp_mail/check_mailbox", data={"temp_email": temp_mail}, **auth(self.user)
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)

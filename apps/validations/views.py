@@ -54,10 +54,7 @@ class IMEIViewSet(ExtendedRetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         if request.user.is_authenticated:
-            serializer.save(
-                is_valid=True,
-                user=request.user
-            )
+            serializer.save(is_valid=True, user=request.user)
         return Response(serializer.data)
 
     @action(detail=False, methods=["post"], url_path="generate_imei", url_name="generate_imei")
@@ -66,10 +63,7 @@ class IMEIViewSet(ExtendedRetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(data={"imei": imei})
         serializer.is_valid(raise_exception=True)
         if request.user.is_authenticated:
-            serializer.save(
-                is_valid=True,
-                user=request.user
-            )
+            serializer.save(is_valid=True, user=request.user)
         return Response(serializer.data)
 
     @action(detail=False, methods=["get"], url_path="user_imei", url_name="user_imei")

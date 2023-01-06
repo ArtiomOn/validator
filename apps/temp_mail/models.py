@@ -15,18 +15,8 @@ __all__ = [
 class TempMail(BaseModel):
     temp_email = models.EmailField(blank=True, null=True, unique=True)
     email_username = models.CharField(max_length=255)
-    email_domain = models.ForeignKey(
-        "Domain",
-        on_delete=models.CASCADE,
-        related_name="temp_mail"
-    )
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="temp_email",
-        null=True,
-        blank=True
-    )
+    email_domain = models.ForeignKey("Domain", on_delete=models.CASCADE, related_name="temp_mail")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="temp_email", null=True, blank=True)
     messages = models.ManyToManyField(
         "Message",
         related_name="temp_email",
@@ -38,17 +28,9 @@ class TempMail(BaseModel):
         verbose_name_plural = "Temporary mails"
         ordering = ("-created_at",)
 
-    def save(
-            self,
-            force_insert=False,
-            force_update=False,
-            using=None,
-            update_fields=None
-    ):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.temp_email = f"{self.email_username}@{self.email_domain}"
-        super(TempMail, self).save(
-            force_insert, force_update, using, update_fields
-        )
+        super(TempMail, self).save(force_insert, force_update, using, update_fields)
 
 
 class Message(BaseModel):

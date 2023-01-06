@@ -8,7 +8,6 @@ from validate_email.exceptions import DNSTimeoutError
 
 
 class EmailValidator:
-
     def __call__(self, email: str):
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             raise ValidationError("Email is invalid")
@@ -22,7 +21,7 @@ class EmailValidator:
                 smtp_skip_tls=False,
                 smtp_tls_context=None,
                 smtp_debug=False,
-                address_types=frozenset([IPv4Address, IPv6Address])
+                address_types=frozenset([IPv4Address, IPv6Address]),
             )
         except DNSTimeoutError:
             raise ValidationError("Service is unavailable")
@@ -40,7 +39,10 @@ class IMEIValidator:
         # Check IMEI length (15 digits)
         if not re.match(r"^\d{15}$", imei):
             raise ValidationError("IMEI is invalid")
-        check_imei, validation_digit, = imei[:-1], imei[-1]
+        check_imei, validation_digit, = (
+            imei[:-1],
+            imei[-1],
+        )
         # Multiply every second element with 2
         check_imei = [int(num) * 2 if idx % 2 != 0 else int(num) for idx, num in enumerate(check_imei)]
         # Separate imei into single digits and sum them

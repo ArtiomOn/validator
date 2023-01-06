@@ -10,7 +10,7 @@ from apps.temp_mail.serializers import (
     CreateTempMailSerializer,
     TempMailMessageSerializer,
     TempMailSerializer,
-    DomainSerializer
+    DomainSerializer,
 )
 
 __all__ = [
@@ -48,9 +48,7 @@ class TempMailViewSet(ExtendedViewSet):
     def create_temporary_email(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(
-            user=request.user if request.user.is_authenticated else None
-        )
+        serializer.save(user=request.user if request.user.is_authenticated else None)
         return Response(serializer.data)
 
     @action(methods=["post"], detail=False, url_path="create_random_temporary_email")
@@ -63,9 +61,7 @@ class TempMailViewSet(ExtendedViewSet):
         }
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(
-            user=request.user if request.user.is_authenticated else None
-        )
+        serializer.save(user=request.user if request.user.is_authenticated else None)
         return Response(serializer.data)
 
     @action(methods=["get"], detail=False, url_path="user_emails")
@@ -79,19 +75,14 @@ class TempMailViewSet(ExtendedViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         mail_helper = TempMailHelper()
-        mail_helper.get_messages(
-            validated_data=serializer.validated_data,
-            user=request.user
-        )
+        mail_helper.get_messages(validated_data=serializer.validated_data, user=request.user)
         return Response(status=status.HTTP_200_OK)
 
     @action(methods=["post"], detail=False, url_path="check_mailbox")
     def check_mailbox(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        queryset = TempMail.objects.filter(
-            temp_email=serializer.validated_data["temp_email"]
-        ).last()
+        queryset = TempMail.objects.filter(temp_email=serializer.validated_data["temp_email"]).last()
         if not queryset:
             raise ValueError("Email not found")
         return Response(TempMailSerializer(queryset).data)

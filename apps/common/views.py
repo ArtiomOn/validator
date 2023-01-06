@@ -1,10 +1,5 @@
 from django_filters import FilterSet
-from rest_framework.generics import (
-    CreateAPIView,
-    RetrieveUpdateDestroyAPIView,
-    RetrieveAPIView,
-    ListAPIView
-)
+from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView, ListAPIView
 from rest_framework.viewsets import GenericViewSet
 
 DEFAULT = "default"
@@ -52,9 +47,7 @@ class ExtendedCreateAPIView(CreateAPIView, ExtendedViewSet):
     ...
 
 
-class ExtendedRetrieveUpdateDestroyAPIView(
-    RetrieveUpdateDestroyAPIView, ExtendedViewSet
-):
+class ExtendedRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView, ExtendedViewSet):
     ...
 
 

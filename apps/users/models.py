@@ -10,21 +10,11 @@ __all__ = (
 
 class CustomUserManager(UserManager):
     def create_superuser(self, email=None, password=None, **extra_fields):
-        return super().create_superuser(
-            username=email,
-            email=email,
-            password=password,
-            **extra_fields
-        )
+        return super().create_superuser(username=email, email=email, password=password, **extra_fields)
 
     def create_user(self, username, email=None, password=None, **extra_fields):
         email = self.normalize_email(email)
-        return super().create_user(
-            username=email,
-            email=email,
-            password=password,
-            **extra_fields
-        )
+        return super().create_user(username=email, email=email, password=password, **extra_fields)
 
 
 class CustomUser(AbstractUser, BaseModel):

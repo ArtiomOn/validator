@@ -6,9 +6,7 @@ from apps.validations.validators.validators import EmailValidator, IMEIValidator
 
 class EmailSerializer(ModelSerializer):
     email = CharField(
-        validators=[
-            EmailValidator()
-        ],
+        validators=[EmailValidator()],
         required=True,
     )
 
@@ -23,9 +21,7 @@ class EmailSerializer(ModelSerializer):
 
 class IMEISerializer(ModelSerializer):
     imei = CharField(
-        validators=[
-            IMEIValidator()
-        ],
+        validators=[IMEIValidator()],
         required=True,
     )
 

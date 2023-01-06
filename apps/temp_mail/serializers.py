@@ -44,11 +44,7 @@ class TempMailMessageSerializer(ModelSerializer):
 class CreateTempMailSerializer(ModelSerializer):
     email_domain = DomainSerializer(read_only=True)
     email_domain_id = serializers.PrimaryKeyRelatedField(
-        queryset=Domain.objects.all(),
-        source="email_domain",
-        write_only=True,
-        required=False,
-        allow_null=True
+        queryset=Domain.objects.all(), source="email_domain", write_only=True, required=False, allow_null=True
     )
 
     class Meta:
