@@ -11,7 +11,13 @@ class TempMailAdmin(admin.ModelAdmin):
         "user",
         "created_at",
     )
-    fields = ("temp_email", "email_username", "email_domain", "messages", "user")
+    fields = (
+        "temp_email",
+        "email_username",
+        "email_domain",
+        "messages",
+        "user",
+    )
     list_filter = (
         "email_domain",
         "user",
