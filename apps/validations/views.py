@@ -6,7 +6,12 @@ from apps.common.views import ExtendedRetrieveUpdateDestroyAPIView, ExtendedList
 from apps.validations.generators.imei_generator import ImeiGenerator
 from apps.validations.generators.jwt_generator import JWTGenerator
 from apps.validations.models import Email, IMEI, JwtToken
-from apps.validations.serializers import EmailSerializer, IMEISerializer, JwtTokenSerializer
+from apps.validations.serializers import (
+    EmailSerializer,
+    IMEISerializer,
+    JwtTokenEncodeSerializer,
+    JwtTokenDecodeSerializer,
+)
 
 __all__ = [
     "EmailViewSet",
@@ -83,10 +88,11 @@ class IMEIViewSet(ExtendedRetrieveUpdateDestroyAPIView):
 class JwtTokenViewSet(ExtendedListAPIView, ExtendedRetrieveUpdateDestroyAPIView):
     queryset = JwtToken.objects.all()
     permission_by_action = {
-        "default": [IsAuthenticated],
+        "default": [AllowAny],
     }
     serializers_by_action = {
-        "default": JwtTokenSerializer
+        "default": JwtTokenEncodeSerializer,
+        "decode_jwt_token": JwtTokenDecodeSerializer,
     }
 
     def get_queryset(self):
@@ -95,13 +101,22 @@ class JwtTokenViewSet(ExtendedListAPIView, ExtendedRetrieveUpdateDestroyAPIView)
             return queryset.filter(user=self.request.user)
         return queryset
 
-    @action(detail=False, methods=["post"], url_path="generate_jwt_token", url_name="generate_jwt_token")
-    def generate_jwt_token(self, request, *args, **kwargs):
+    @action(detail=False, methods=["post"], url_path="encode_jwt_token", url_name="encode_jwt_token")
+    def encode_jwt_token(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        jwt_token = JWTGenerator.generate(validated_data=serializer.validated_data)
+        jwt_token = JWTGenerator.encode(validated_data=serializer.validated_data)
+        serializer.save(user=request.user if request.user.is_authenticated else None, jwt_token=jwt_token)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["post"], url_path="decode_jwt_token", url_name="decode_jwt_token")
+    def decode_jwt_token(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        decoded_data = JWTGenerator.decode(validated_data=serializer.validated_data)
         serializer.save(
             user=request.user if request.user.is_authenticated else None,
-            jwt_token=jwt_token
+            jwt_token=serializer.validated_data["jwt_token"],
+            header=decoded_data,
         )
         return Response(serializer.data)
