@@ -31,8 +31,10 @@ class MethodsTestCase(APITestCase):
         data = {
             "email": "artiom@gmail.com",
         }
+        # if email check service is unavailable - it will return 400 STATUS CODE
         response = self.client.post("/validations/email/email_check", data=data, **auth(user=self.user))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
         response = self.client.get("/validations/email/user_email", **auth(user=self.user))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -50,4 +52,13 @@ class MethodsTestCase(APITestCase):
         response = self.client.get("/validations/imei/user_imei", **auth(user=self.user))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response = self.client.post("/validations/imei/generate_imei", **auth(user=self.user))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_jwt_token_check(self):
+        data = {"header": {"test": "test", "age": 1}}
+        response = self.client.post(
+            "/validations/jwt_token/generate_jwt_token", data=data, format="json", **auth(user=self.user)
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.get("/validations/jwt_token", **auth(self.user))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
