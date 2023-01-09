@@ -2,12 +2,11 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 
-from apps.common.views import ExtendedRetrieveUpdateDestroyAPIView, ExtendedViewSet
-from apps.validations.models import Email, IMEI, JwtToken
-from apps.validations.serializers import EmailSerializer, IMEISerializer, JwtTokenSerializer
+from apps.common.views import ExtendedRetrieveUpdateDestroyAPIView, ExtendedListAPIView
 from apps.validations.generators.imei_generator import ImeiGenerator
 from apps.validations.generators.jwt_generator import JWTGenerator
-
+from apps.validations.models import Email, IMEI, JwtToken
+from apps.validations.serializers import EmailSerializer, IMEISerializer, JwtTokenSerializer
 
 __all__ = [
     "EmailViewSet",
@@ -81,14 +80,20 @@ class IMEIViewSet(ExtendedRetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
 
-class JwtTokenViewSet(ExtendedViewSet):
+class JwtTokenViewSet(ExtendedListAPIView, ExtendedRetrieveUpdateDestroyAPIView):
     queryset = JwtToken.objects.all()
     permission_by_action = {
-        "default": [AllowAny]
+        "default": [IsAuthenticated],
     }
     serializers_by_action = {
         "default": JwtTokenSerializer
     }
+
+    def get_queryset(self):
+        queryset = super(JwtTokenViewSet, self).get_queryset()
+        if self.action == "list":
+            return queryset.filter(user=self.request.user)
+        return queryset
 
     @action(detail=False, methods=["post"], url_path="generate_jwt_token", url_name="generate_jwt_token")
     def generate_jwt_token(self, request, *args, **kwargs):
@@ -100,4 +105,3 @@ class JwtTokenViewSet(ExtendedViewSet):
             jwt_token=jwt_token
         )
         return Response(serializer.data)
-
