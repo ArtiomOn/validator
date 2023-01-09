@@ -2,10 +2,22 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 
-from apps.common.views import ExtendedRetrieveUpdateDestroyAPIView
-from apps.validations.models import Email, IMEI
-from apps.validations.serializers import EmailSerializer, IMEISerializer
-from apps.validations.validators.generators import ImeiGenerator
+from apps.common.views import ExtendedRetrieveUpdateDestroyAPIView, ExtendedListAPIView
+from apps.validations.generators.imei_generator import ImeiGenerator
+from apps.validations.generators.jwt_generator import JWTGenerator
+from apps.validations.models import Email, IMEI, JwtToken
+from apps.validations.serializers import (
+    EmailSerializer,
+    IMEISerializer,
+    JwtTokenEncodeSerializer,
+    JwtTokenDecodeSerializer,
+)
+
+__all__ = [
+    "EmailViewSet",
+    "IMEIViewSet",
+    "JwtTokenViewSet",
+]
 
 
 # noinspection DuplicatedCode
@@ -70,4 +82,41 @@ class IMEIViewSet(ExtendedRetrieveUpdateDestroyAPIView):
     def user_imei(self, request, *args, **kwargs):
         queryset = self.queryset.filter(user=request.user)
         serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class JwtTokenViewSet(ExtendedListAPIView, ExtendedRetrieveUpdateDestroyAPIView):
+    queryset = JwtToken.objects.all()
+    permission_by_action = {
+        "default": [AllowAny],
+    }
+    serializers_by_action = {
+        "default": JwtTokenEncodeSerializer,
+        "decode_jwt_token": JwtTokenDecodeSerializer,
+    }
+
+    def get_queryset(self):
+        queryset = super(JwtTokenViewSet, self).get_queryset()
+        if self.action == "list":
+            return queryset.filter(user=self.request.user)
+        return queryset
+
+    @action(detail=False, methods=["post"], url_path="encode_jwt_token", url_name="encode_jwt_token")
+    def encode_jwt_token(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        jwt_token = JWTGenerator.encode(validated_data=serializer.validated_data)
+        serializer.save(user=request.user if request.user.is_authenticated else None, jwt_token=jwt_token)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["post"], url_path="decode_jwt_token", url_name="decode_jwt_token")
+    def decode_jwt_token(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        decoded_data = JWTGenerator.decode(validated_data=serializer.validated_data)
+        serializer.save(
+            user=request.user if request.user.is_authenticated else None,
+            jwt_token=serializer.validated_data["jwt_token"],
+            header=decoded_data,
+        )
         return Response(serializer.data)

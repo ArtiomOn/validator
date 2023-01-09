@@ -1,7 +1,11 @@
 from rest_framework.serializers import ModelSerializer, CharField
 
-from apps.validations.models import Email, IMEI
-from apps.validations.validators.validators import EmailValidator, IMEIValidator
+from apps.validations.models import Email, IMEI, JwtToken
+from apps.validations.validators.imei_validator import IMEIValidator
+from apps.validations.validators.email_validator import EmailValidator
+
+
+__all__ = ["EmailSerializer", "IMEISerializer", "JwtTokenEncodeSerializer"]
 
 
 class EmailSerializer(ModelSerializer):
@@ -31,4 +35,21 @@ class IMEISerializer(ModelSerializer):
         extra_kwargs = {
             "is_valid": {"read_only": True},
             "user": {"read_only": True},
+        }
+
+
+class JwtTokenEncodeSerializer(ModelSerializer):
+    class Meta:
+        model = JwtToken
+        fields = "__all__"
+        extra_kwargs = {"jwt_token": {"read_only": True}, "user": {"read_only": True}}
+
+
+class JwtTokenDecodeSerializer(ModelSerializer):
+    class Meta:
+        model = JwtToken
+        fields = "__all__"
+        extra_kwargs = {
+            "user": {"read_only": True},
+            "header": {"read_only": True},
         }
