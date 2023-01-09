@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "rest_framework_swagger",
     "rest_framework_simplejwt",
     "django_filters",
+    "django_json_widget",
     # Local apps
     "apps.common",
     "apps.users",

@@ -2,10 +2,18 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 
-from apps.common.views import ExtendedRetrieveUpdateDestroyAPIView
-from apps.validations.models import Email, IMEI
-from apps.validations.serializers import EmailSerializer, IMEISerializer
-from apps.validations.validators.imei_generator import ImeiGenerator
+from apps.common.views import ExtendedRetrieveUpdateDestroyAPIView, ExtendedViewSet
+from apps.validations.models import Email, IMEI, JwtToken
+from apps.validations.serializers import EmailSerializer, IMEISerializer, JwtTokenSerializer
+from apps.validations.generators.imei_generator import ImeiGenerator
+from apps.validations.generators.jwt_generator import JWTGenerator
+
+
+__all__ = [
+    "EmailViewSet",
+    "IMEIViewSet",
+    "JwtTokenViewSet",
+]
 
 
 # noinspection DuplicatedCode
@@ -71,3 +79,25 @@ class IMEIViewSet(ExtendedRetrieveUpdateDestroyAPIView):
         queryset = self.queryset.filter(user=request.user)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class JwtTokenViewSet(ExtendedViewSet):
+    queryset = JwtToken.objects.all()
+    permission_by_action = {
+        "default": [AllowAny]
+    }
+    serializers_by_action = {
+        "default": JwtTokenSerializer
+    }
+
+    @action(detail=False, methods=["post"], url_path="generate_jwt_token", url_name="generate_jwt_token")
+    def generate_jwt_token(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        jwt_token = JWTGenerator.generate(validated_data=serializer.validated_data)
+        serializer.save(
+            user=request.user if request.user.is_authenticated else None,
+            jwt_token=jwt_token
+        )
+        return Response(serializer.data)
+

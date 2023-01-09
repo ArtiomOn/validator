@@ -5,6 +5,12 @@ from apps.common.models import BaseModel
 
 User = get_user_model()
 
+__all__ = [
+    "Email",
+    "IMEI",
+    "JwtToken"
+]
+
 
 class Email(BaseModel):
     email = models.EmailField(max_length=254)
@@ -32,3 +38,14 @@ class IMEI(BaseModel):
 
     def __str__(self):
         return self.imei
+
+
+class JwtToken(BaseModel):
+    jwt_token = models.CharField(max_length=2048)
+    header = models.JSONField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        verbose_name = "JWT Token"
+        verbose_name_plural = "JWT Tokens"
+        ordering = ["created_at"]
