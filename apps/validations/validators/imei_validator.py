@@ -1,10 +1,8 @@
 import math
 import re
-from ipaddress import IPv4Address, IPv6Address
 
 from rest_framework.exceptions import ValidationError
-from validate_email import validate_email_or_fail
-from validate_email.exceptions import DNSTimeoutError
+
 
 class IMEIValidator:
 
