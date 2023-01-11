@@ -23,8 +23,7 @@ __all__ = [
 class TempMailViewSet(ExtendedViewSet, DestroyModelMixin):
     queryset = TempMail.objects.all()
     permission_by_action = {
-        "default": [AllowAny],
-        "user_emails": [IsAuthenticated],
+        "default": [IsAuthenticated],
         "destroy": [IsOwner],
     }
     serializers_by_action = {

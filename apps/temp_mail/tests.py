@@ -29,9 +29,7 @@ class MethodsTestCase(APITestCase):
         self.domain = Domain.objects.first()
 
     def test_temp_mail(self):
-        response = self.client.get(
-            "/temp_mail/temp_mail/get_all_domains",
-        )
+        response = self.client.get("/temp_mail/temp_mail/get_all_domains", **auth(self.user))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = {
             "email_username": TempMailHelper.generate_user_name(),
@@ -40,10 +38,12 @@ class MethodsTestCase(APITestCase):
         response = self.client.post(
             "/temp_mail/temp_mail/create_temporary_email",
             data=data,
+            **auth(user=self.user),
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response = self.client.post(
             "/temp_mail/temp_mail/create_random_temporary_email",
+            **auth(user=self.user),
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response = self.client.get("/temp_mail/temp_mail/user_emails", **auth(self.user))
