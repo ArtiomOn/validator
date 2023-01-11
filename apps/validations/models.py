@@ -1,15 +1,11 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
-from django.contrib.auth import get_user_model
 from apps.common.models import BaseModel
 
 User = get_user_model()
 
-__all__ = [
-    "Email",
-    "IMEI",
-    "JwtToken"
-]
+__all__ = ["Email", "IMEI", "JwtToken"]
 
 
 class Email(BaseModel):

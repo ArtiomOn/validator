@@ -1,11 +1,10 @@
 from rest_framework.serializers import ModelSerializer, CharField
 
 from apps.validations.models import Email, IMEI, JwtToken
-from apps.validations.validators.imei_validator import IMEIValidator
-from apps.validations.validators.email_validator import EmailValidator
+from apps.validations.custom_validation.imei_validator import IMEIValidator
+from apps.validations.custom_validation.email_validator import EmailValidator
 
-
-__all__ = ["EmailSerializer", "IMEISerializer", "JwtTokenEncodeSerializer"]
+__all__ = ["EmailSerializer", "IMEISerializer", "JwtTokenEncodeSerializer", "JwtTokenDecodeSerializer"]
 
 
 class EmailSerializer(ModelSerializer):

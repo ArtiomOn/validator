@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from apps.common.models import BaseModel
+from apps.temp_mail.querysets import TempMailQuerySet
 
 User = get_user_model()
 
@@ -13,6 +14,8 @@ __all__ = [
 
 
 class TempMail(BaseModel):
+    objects = TempMailQuerySet.as_manager()
+
     temp_email = models.EmailField(blank=True, null=True, unique=True)
     email_username = models.CharField(max_length=255)
     email_domain = models.ForeignKey("Domain", on_delete=models.CASCADE, related_name="temp_mail")

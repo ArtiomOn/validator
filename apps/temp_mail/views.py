@@ -1,11 +1,13 @@
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.mixins import DestroyModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from apps.common.views import ExtendedViewSet
 from apps.temp_mail.helpers import TempMailHelper
 from apps.temp_mail.models import TempMail, Domain
+from apps.temp_mail.permissions import IsOwner
 from apps.temp_mail.serializers import (
     CreateTempMailSerializer,
     TempMailMessageSerializer,
@@ -18,11 +20,12 @@ __all__ = [
 ]
 
 
-class TempMailViewSet(ExtendedViewSet):
+class TempMailViewSet(ExtendedViewSet, DestroyModelMixin):
     queryset = TempMail.objects.all()
     permission_by_action = {
         "default": [AllowAny],
         "user_emails": [IsAuthenticated],
+        "destroy": [IsOwner],
     }
     serializers_by_action = {
         "default": CreateTempMailSerializer,
@@ -32,11 +35,6 @@ class TempMailViewSet(ExtendedViewSet):
         "save_messages": TempMailMessageSerializer,
         "check_mailbox": TempMailMessageSerializer,
     }
-
-    def get_queryset(self):
-        if self.action == "get_all_domains":
-            return Domain.objects.all()
-        return super(TempMailViewSet, self).get_queryset()
 
     @action(methods=["get"], detail=False, url_path="get_all_domains")
     def get_all_domains(self, request, *args, **kwargs):
@@ -48,11 +46,13 @@ class TempMailViewSet(ExtendedViewSet):
     def create_temporary_email(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        self.queryset.email_limit(user=request.user)
         serializer.save(user=request.user if request.user.is_authenticated else None)
         return Response(serializer.data)
 
     @action(methods=["post"], detail=False, url_path="create_random_temporary_email")
     def create_random_temporary_email(self, request, *args, **kwargs):
+        self.queryset.email_limit(user=request.user)
         username = TempMailHelper.generate_user_name()
         domain = Domain.objects.order_by("?").first()
         data = {
@@ -72,9 +72,10 @@ class TempMailViewSet(ExtendedViewSet):
 
     @action(methods=["post"], detail=False, url_path="save_messages")
     def save_messages(self, request, *args, **kwargs):
+        mail_helper = TempMailHelper()
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        mail_helper = TempMailHelper()
+        self.queryset.check_users_email(user=request.user, data=serializer.validated_data)
         mail_helper.get_messages(validated_data=serializer.validated_data, user=request.user)
         return Response(status=status.HTTP_200_OK)
 
@@ -82,7 +83,5 @@ class TempMailViewSet(ExtendedViewSet):
     def check_mailbox(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        queryset = TempMail.objects.filter(temp_email=serializer.validated_data["temp_email"]).last()
-        if not queryset:
-            raise ValueError("Email not found")
+        queryset = self.queryset.check_users_email(user=request.user, data=serializer.validated_data)
         return Response(TempMailSerializer(queryset).data)
