@@ -61,9 +61,12 @@ class MethodsTestCase(APITestCase):
         response = self.client.post(
             "/temp_mail/temp_mail/create_temporary_email",
             data=data,
+            **auth(user=self.user),
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.client.post("/temp_mail/temp_mail/save_messages", data={"temp_email": temp_mail})
+        response = self.client.post(
+            "/temp_mail/temp_mail/save_messages", data={"temp_email": temp_mail}, **auth(self.user)
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         response = self.client.post(

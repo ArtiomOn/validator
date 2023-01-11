@@ -19,4 +19,4 @@ class TempMailQuerySet(QuerySet):
         queryset = self.filter(user=user, temp_email=temp_email)
         if not queryset.exists():
             raise ValidationError("This email is not yours")
-        return queryset
+        return queryset.last()
