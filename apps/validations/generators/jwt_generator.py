@@ -2,6 +2,7 @@ import base64
 
 import jwt
 from jwt import DecodeError
+from rest_framework.exceptions import ValidationError
 
 
 class JWTGenerator:
@@ -17,5 +18,5 @@ class JWTGenerator:
         try:
             decoded_jwt = jwt.decode(jwt=encoded_jwt, key=base64.b64decode("c2VjcmV0"), algorithms=["HS256"])
         except DecodeError:
-            raise DecodeError("Invalid JWT token")
+            raise ValidationError("Invalid JWT token")
         return decoded_jwt
