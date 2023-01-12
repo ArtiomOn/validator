@@ -78,6 +78,7 @@ py3-validate-email = {git = "https://gitea.ksol.io/karolyi/py3-validate-email", 
 django-bulk-update-or-create = "^0.3.0"
 pre-commit = "^2.21.0"
 django-json-widget = "^1.1.1"
+sentry-sdk = "^1.12.1"
 
 
 [build-system]
