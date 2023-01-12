@@ -35,6 +35,12 @@ class TempMailViewSet(ExtendedViewSet, DestroyModelMixin):
         "check_mailbox": TempMailMessageSerializer,
     }
 
+    def get_queryset(self):
+        queryset = super(TempMailViewSet, self).get_queryset()
+        if self.action == "get_all_domains":
+            return Domain.objects.all()
+        return queryset
+
     @action(methods=["get"], detail=False, url_path="get_all_domains")
     def get_all_domains(self, request, *args, **kwargs):
         queryset = self.get_queryset()

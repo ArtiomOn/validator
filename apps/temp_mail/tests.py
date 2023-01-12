@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from faker import Faker
@@ -64,6 +66,7 @@ class MethodsTestCase(APITestCase):
             **auth(user=self.user),
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.temp_mail_id = json.loads(response.content).get("id")
         response = self.client.post(
             "/temp_mail/temp_mail/save_messages", data={"temp_email": temp_mail}, **auth(self.user)
         )
@@ -73,3 +76,6 @@ class MethodsTestCase(APITestCase):
             "/temp_mail/temp_mail/check_mailbox", data={"temp_email": temp_mail}, **auth(self.user)
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.client.delete(f"/temp_mail/temp_mail/{self.temp_mail_id}", **auth(self.user))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
